@@ -7,28 +7,43 @@ use Prismic\Cache\ApcCache;
 
 class CacheTest extends TestCase
 {
+    /** @var ApcCache */
     private $cache;
 
-    protected function setUp()
+    protected function setUp(): void
     {
+        if (! extension_loaded('apcu')) {
+            $this->markTestSkipped(
+                'The APCu extension is not available.'
+            );
+        }
+        if (! ini_get('apc.enabled') || ! ini_get('apc.enable_cli')) {
+            $this->markTestSkipped(
+                'The APCu extension is not enabled.'
+            );
+        }
+
         $this->cache = new ApcCache();
     }
 
-    public function testSetGetValue()
+    /**
+     * @group pippo
+     */
+    public function testSetGetValue(): void
     {
         $this->cache->set('key', 'value');
-        $this->assertEquals($this->cache->get('key'), 'value');
+        $this->assertEquals('value', $this->cache->get('key'));
     }
 
-    public function testSetDeleteValue()
+    public function testSetDeleteValue(): void
     {
         $this->cache->set('key', 'value');
-        $this->assertEquals($this->cache->get('key'), 'value');
+        $this->assertEquals('value', $this->cache->get('key'));
         $this->cache->delete('key');
         $this->assertNull($this->cache->get('key'));
     }
 
-    public function testSetValueClearHas()
+    public function testSetValueClearHas(): void
     {
         $this->cache->set('key', 'value');
         $this->assertTrue($this->cache->has('key'));
@@ -39,9 +54,9 @@ class CacheTest extends TestCase
         $this->assertTrue($this->cache->has('key'));
         $this->assertTrue($this->cache->has('key1'));
         $this->assertTrue($this->cache->has('key2'));
-        $this->assertEquals($this->cache->get('key'), 'value');
-        $this->assertEquals($this->cache->get('key1'), 'value1');
-        $this->assertEquals($this->cache->get('key2'), 'value2');
+        $this->assertEquals('value', $this->cache->get('key'));
+        $this->assertEquals('value1', $this->cache->get('key1'));
+        $this->assertEquals('value2', $this->cache->get('key2'));
         $this->cache->clear();
         $this->assertFalse($this->cache->has('key'));
         $this->assertFalse($this->cache->has('key1'));
@@ -51,7 +66,7 @@ class CacheTest extends TestCase
         $this->assertNull($this->cache->get('key2'));
     }
 
-    public function testSetGetReturnsExpectedValue()
+    public function testSetGetReturnsExpectedValue(): void
     {
         $data = \json_decode($this->getJsonFixture('data.json'));
         $this->cache->set('key', $data);
@@ -59,7 +74,7 @@ class CacheTest extends TestCase
         $this->assertEquals($data, $result);
     }
 
-    public function testLongUrlBasedCacheKeysArePersistedCorrectly()
+    public function testLongUrlBasedCacheKeysArePersistedCorrectly(): void
     {
         $data = \json_decode($this->getJsonFixture('data.json'));
         $url = $data->forms->everything->action;
