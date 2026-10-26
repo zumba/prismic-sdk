@@ -20,7 +20,7 @@ class RichTextTest extends TestCase
 
     public function testAsText()
     {
-        $expected = "The title\n";
+        $expected = "The title";
         $actual = RichText::asText($this->richText->title);
         $this->assertEquals($expected, $actual);
     }

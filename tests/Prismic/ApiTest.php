@@ -14,6 +14,7 @@ use Psr\Http\Message\RequestInterface;
 use Prophecy\Argument;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Utils;
 
 class ApiTest extends TestCase
 {
@@ -73,7 +74,7 @@ class ApiTest extends TestCase
         $this->cache->get($key)->willReturn(null);
         $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
         $response = $this->prophesize(ResponseInterface::class);
-        $response->getBody()->willReturn($this->getJsonFixture('data.json'));
+        $response->getBody()->willReturn(Utils::streamFor($this->getJsonFixture('data.json')));
         $this->httpClient->request('GET', $url)->willReturn($response->reveal());
 
         $this->cache->set(
