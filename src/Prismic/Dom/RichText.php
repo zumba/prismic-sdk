@@ -277,7 +277,7 @@ class RichText
             case 'o-list-item':
                 return nl2br('<li' . $classCode . '>' . $content . '</li>');
             case 'image':
-                $img = '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">';
+                $img = '<img src="' . $element->url . '" alt="' . htmlentities($element->alt ?? '') . '">';
 
                 $link = property_exists($element, 'linkTo') ? Link::asUrl($element->linkTo, $linkResolver) : null;
 
