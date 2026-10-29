@@ -16,7 +16,7 @@ use stdClass;
 /**
  * This class embodies a connection to your Prismic repository's API.
  * Initialize it with Prismic::Api::get(), and use your Prismic::Api::form() to make API calls
- * (read more in <a href="https://github.com/prismicio/php-kit">the kit's README file</a>)
+ * (read more in <a href="https://github.com/prismicio-community/php-kit">the kit's README file</a>)
  */
 class Api
 {
@@ -151,6 +151,9 @@ class Api
      * Returns the list of all bookmarks on the repository. If you're looking
      * for a document from it's bookmark name, you should use the bookmark() function.
      *
+     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025,
+     * as bookmarks are removed from the API.
+     *
      * @return array the array of bookmarks
      */
     public function bookmarks() : array
@@ -164,6 +167,9 @@ class Api
      * that looks like this [:d = at(document.id, "abcdefghijkl")].
      * Most starter projects embed a helper to query a document from their ID string,
      * which makes this even easier.
+     *
+     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025,
+     * as bookmarks are removed from the API.
      *
      * @param string $name the bookmark name to use
      *
@@ -318,7 +324,7 @@ class Api
 
         // Query the server for the rest
         if (count($promises) > 0) {
-            $raw_responses = Promise\unwrap($promises);
+            $raw_responses = Promise\Utils::unwrap($promises);
 
             foreach ($urls as $url) {
                 $response = $raw_responses[$url];
@@ -511,7 +517,7 @@ class Api
     }
 
     /**
-     * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
+     * Use the APCu cache if APCu is activated on the server, otherwise fallback to the noop cache (no cache)
      */
     public static function defaultCache() : CacheInterface
     {
