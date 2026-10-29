@@ -236,7 +236,7 @@ class ApiTest extends TestCase
             Api::get('http://example.example', null, $client);
             $this->fail('No exception was thrown');
         } catch (Prismic\Exception\RequestFailureException $e) {
-            $this->assertStringContainsString('Api Request Failed', $e->getMessage());
+            $this->assertStringContainsString('example.example', $e->getMessage());
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertNull($e->getResponse());
         }
